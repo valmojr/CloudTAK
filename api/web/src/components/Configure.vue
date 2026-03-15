@@ -81,7 +81,10 @@
                                         </div>
 
                                         <div class='mb-2'>
-                                            <label class='mx-2'>Admin Certificate</label>
+                                            <label class='mx-2'>Admin Certificate (Optional)</label>
+                                            <div class='form-text mb-2'>
+                                                Upload a client certificate if you already have one. Otherwise, CloudTAK will use the WebTAK enrollment response to generate and store a server certificate automatically.
+                                            </div>
                                             <CertificateP12
                                                 v-if='!body.auth || !body.auth.cert || !body.auth.key'
                                                 @certs='body.auth = $event'
@@ -111,7 +114,7 @@
                                             <TablerInput
                                                 v-model='body.username'
                                                 label='Initial Administrator Username'
-                                                description='An existing TAK user to use as an initial CloudTAK System Administrator - The TAK Server must respond with a cert for this username/password combo'
+                                                description='Existing TAK user used to bootstrap CloudTAK. If no certificate is uploaded, CloudTAK will enroll one for this user through WebTAK.'
                                                 autocomplete='username'
                                                 :error='errors.username'
                                                 @keyup.enter='updateServer'
@@ -122,7 +125,7 @@
                                                 v-model='body.password'
                                                 type='password'
                                                 label='Initial Administrator Password'
-                                                description='An existing TAK user to use as an initial CloudTAK System Administrator - The TAK Server must respond with a cert for this username/password combo'
+                                                description='Password for the TAK user used during bootstrap enrollment.'
                                                 autocomplete='password'
                                                 :error='errors.password'
                                                 @keyup.enter='updateServer'
@@ -132,7 +135,6 @@
                                             <button
                                                 type='submit'
                                                 class='btn btn-primary w-100'
-                                                :disabled='!body.auth || !body.auth.key'
                                                 @click='updateServer'
                                             >
                                                 Configure Server

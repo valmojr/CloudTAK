@@ -117,12 +117,14 @@ export default async function router(schema: Schema, config: Config) {
                 }
             }
 
+            let auth = req.body.auth;
+
             // An unconfigured server will set the first successful username/pass as a CloudTAK System Admin
             if (!config.server.auth.key && !config.server.auth.cert && req.body.username && req.body.password) {
-                const auth = new APIAuthPassword(req.body.username, req.body.password)
-                const api = await TAKAPI.init(new URL(req.body.webtak), auth);
+                const api = await TAKAPI.init(new URL(req.body.webtak), new APIAuthPassword(req.body.username, req.body.password));
 
                 const certs = await api.Credentials.generate();
+                if (!auth?.cert || !auth?.key) auth = certs;
 
                 await profileControl.generate({
                     auth: certs,
@@ -135,6 +137,7 @@ export default async function router(schema: Schema, config: Config) {
 
             config.server = await config.models.Server.commit(config.server.id, {
                 ...req.body,
+                auth,
                 updated: sql`Now()`,
             });
 

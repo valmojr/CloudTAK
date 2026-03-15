@@ -208,6 +208,40 @@ test('GET: api/server - Unconfigured - No Auth', async () => {
     }
 });
 
+<<<<<<< HEAD
+test('PATCH: api/server - Bootstrap Without Uploaded Cert', async () => {
+    try {
+        const res = await flight.fetch('/api/server', {
+            method: 'PATCH',
+            body: {
+                name: 'Default TAK Server',
+                url: 'ssl://localhost:8089',
+                api: 'https://localhost:8443',
+                webtak: 'http://localhost:8444',
+                username: 'bootstrap-admin@example.com',
+                password: 'bootstrap-password'
+            }
+        }, true);
+
+        delete res.body.version;
+        delete res.body.created;
+        delete res.body.updated;
+        delete res.body.certificate;
+
+        assert.deepEqual(res.body, {
+            id: 1,
+            status: 'configured',
+            name: 'Default TAK Server',
+            url: 'ssl://localhost:8089',
+            api: 'https://localhost:8443',
+            webtak: 'http://localhost:8444',
+            auth: true
+        });
+    } catch (err) {
+        assert.ifError(err);
+    }
+});
+
 test('PATCH: api/server - Unconfigured without username/password', async () => {
     try {
         const res = await flight.fetch('/api/server', {
@@ -226,6 +260,27 @@ test('PATCH: api/server - Unconfigured without username/password', async () => {
 
         assert.equal(res.status, 400);
         assert.equal(res.body.message, 'Initial configuration must include valid TAK Username & Password to set System Administrator');
+    } catch (err) {
+        assert.ifError(err);
+    }
+});
+
+test('GET: api/server - Configured After Bootstrap', async () => {
+    try {
+        const res = await flight.fetch('/api/server', {
+            method: 'GET',
+            auth: {
+                bearer: flight.token.admin
+            }
+        }, true);
+
+        assert.equal(res.body.status, 'configured');
+        assert.equal(res.body.auth, true);
+        assert.equal(res.body.name, 'Default TAK Server');
+        assert.equal(res.body.url, 'ssl://localhost:8089');
+        assert.equal(res.body.api, 'https://localhost:8443');
+        assert.equal(res.body.webtak, 'http://localhost:8444');
+        assert.ok(res.body.certificate);
     } catch (err) {
         assert.ifError(err);
     }
