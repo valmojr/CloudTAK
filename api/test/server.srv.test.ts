@@ -208,7 +208,6 @@ test('GET: api/server - Unconfigured - No Auth', async () => {
     }
 });
 
-<<<<<<< HEAD
 test('PATCH: api/server - Bootstrap Without Uploaded Cert', async () => {
     try {
         const res = await flight.fetch('/api/server', {
