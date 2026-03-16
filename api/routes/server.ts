@@ -143,14 +143,14 @@ export default async function router(schema: Schema, config: Config) {
 
             await config.conns.refresh();
 
-            let auth = false
-            if (config.server.auth.cert && config.server.auth.key) auth = true;
+            let hasAuth = false
+            if (config.server.auth.cert && config.server.auth.key) hasAuth = true;
 
             const response: Static<typeof ServerResponse> = {
                 status: 'configured',
                 version: pkg.version,
                 ...config.server,
-                auth
+                auth: hasAuth
             };
 
             if (config.server.auth.cert && config.server.auth.key) {

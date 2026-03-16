@@ -49,7 +49,7 @@ services:
             - "5003:5003"
         environment:
             - CLOUDTAK_Mode=${CLOUDTAK_Mode}
-            - API_URL=${API_URL}
+            - API_URL=http://api:5000
             - SigningSecret=${SigningSecret}
             - ASSET_BUCKET=${ASSET_BUCKET}
             - AWS_S3_Endpoint=${AWS_S3_Endpoint}
@@ -60,7 +60,7 @@ services:
         image: ghcr.io/dfpc-coe/media-infra:v9.1.1
         restart: 'always'
         environment:
-            - API_URL=${API_URL}
+            - API_URL=http://api:5000
             - SigningSecret=${SigningSecret}
             - CLOUDTAK_Config_media_url=${CLOUDTAK_Config_media_url}
         ports:
